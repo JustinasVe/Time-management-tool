@@ -6,6 +6,7 @@ function App() {
       <Routes>
         <Route path="/" element={<div>Home route</div>} />
         <Route path="/register" element={<div>Register route</div>} />
+        <Route path="/calculations" element={<div>Calculations route</div>} />
       </Routes>
     </div>
   );

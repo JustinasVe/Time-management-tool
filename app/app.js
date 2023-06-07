@@ -10,11 +10,11 @@ app.use(cors());
 app.use(express.json());
 
 const mysqlConfig = {
-    host: process.env.MY_HOST,
-    user: process.env.MY_USER,
-    password: process.env.MY_PASSWORD,
-    database: process.env.MY_DATABASE,
-    port: process.env.MY_PORT
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE,
+    port: process.env.MYSQL_PORT
 };
 
 const connection = mysql.createConnection(mysqlConfig);
