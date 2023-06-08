@@ -3,6 +3,40 @@ import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
 import { UserContext } from "../../contexts/UserContextWrapper";
+import styled from 'styled-components';
+
+const LoginContainer = styled.div`
+    align-items: center;
+    background-color: lightgrey;
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+`;
+
+const FormStyled = styled.form`
+    background-color: #fff;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: center;
+    max-width: 100%;
+    padding: 20px;
+    width: 400px;
+`;
+
+const LinkStyled = styled(Link)`
+    align-self: center;
+`;
+
+const H1Styled = styled.h1`
+    align-self: center;
+`
+
+const ErrorStyled = styled.div`
+    color: red;
+    text-align: center;
+`;
 
 export const Login = () => {
     const [email, setEmail] = useState('');
@@ -50,10 +84,12 @@ export const Login = () => {
     }
 
     return (
-        <>
-            <form onSubmit={handleLogin} disabled={isLoading} >
+        <LoginContainer>
+            <FormStyled onSubmit={handleLogin} disabled={isLoading} >
+                <H1Styled>Time Management Tool</H1Styled>
                 <Input
                     placeholder="Email"
+                    type="email"
                     onChange={(e) => setEmail(e.target.value)}
                     value={email}
                 />
@@ -63,10 +99,10 @@ export const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     value={password}
                 />
-                {error && <div>{error}</div>}
+                {error && <ErrorStyled>{error}</ErrorStyled>}
                 <Button>Login</Button>
-            </form>
-            <Link to="/register">Register</Link>
-        </>
+                <LinkStyled to="/register">Register</LinkStyled>
+            </FormStyled>
+        </LoginContainer>
     )
 }
