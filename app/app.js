@@ -1,6 +1,7 @@
 const cors = require('cors');
 const express = require('express');
 const mysql = require('mysql2');
+const bcrypt = require('bcrypt');
 
 require('dotenv').config();
 
@@ -24,6 +25,19 @@ app.get('/calculations', (req, res) => {
     connection.execute('SELECT * FROM calculations WHERE userId=?', [userId], (err, calculations) => {
         res.send(calculations)
     });
+});
+
+app.post('/register', (req, res) => {
+    const { name, surname, email, password } = req.body;
+    const hashedPassword = bcrypt.hashSync(password, 12);
+
+    connection.execute(
+        'INSERT INTO users (name, surname, email, password) VALUES (?, ?, ?, ?)',
+        [name, surname, email, hashedPassword],
+        (err, result) => {
+            res.sendStatus(200);
+        }
+    )
 });
 
 const PORT = 8000;
