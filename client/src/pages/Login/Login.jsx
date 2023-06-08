@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import Button from "../../components/Button";
+import Input from "../../components/Input";
 
 export const Login = ({ onSuccess }) => {
     const [email, setEmail] = useState('');
@@ -29,18 +31,18 @@ export const Login = ({ onSuccess }) => {
     return (
         <>
             <form onSubmit={handleLogin}>
-                <input
+                <Input
                     placeholder="Email"
                     onChange={(e) => setEmail(e.target.value)}
                     value={email}
                 />
-                <input
+                <Input
                     placeholder="Password"
                     type="password"
                     onChange={(e) => setPassword(e.target.value)}
                     value={password}
                 />
-                <button>Login</button>
+                <Button>Login</Button>
             </form>
             <Link to="/register">Register</Link>
         </>

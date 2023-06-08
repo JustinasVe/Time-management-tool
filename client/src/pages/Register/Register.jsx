@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Button from "../../components/Button";
+import Input from "../../components/Input";
 
 export const Register = () => {
     const navigate = useNavigate();
@@ -31,29 +33,29 @@ export const Register = () => {
     return (
         <>
             <form onSubmit={handleRegister}>
-                <input
+                <Input
                     placeholder="Name"
                     onChange={(e) => setName(e.target.value)}
                     value={name}
                 />
-                <input
+                <Input
                     placeholder="Surname"
                     onChange={(e) => setSurname(e.target.value)}
                     value={surname}
                 />
-                <input
+                <Input
                     placeholder="Email"
                     onChange={(e) => setEmail(e.target.value)}
                     type="email"
                     value={email}
                 />
-                <input 
+                <Input 
                     placeholder="Password"
                     type="password"
                     onChange={(e) => setPassword(e.target.value)}
                     value={password}
                 />
-                <button>Register</button>
+                <Button>Register</Button>
             </form>
             <Link to="/login">Login</Link>
         </>
