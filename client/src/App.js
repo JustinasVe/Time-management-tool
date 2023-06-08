@@ -4,6 +4,7 @@ import UserContextWrapper from "./contexts";
 import Calculations from "./pages/Calculations";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import NotFound from "./pages/NotFound";
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </UserContextWrapper>
   );
