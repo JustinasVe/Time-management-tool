@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { API_URL } from "../../constants/constants";
 
 export const Calculations = () => {
     const [calculations, setCalculations] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        fetch(`${API_URL}/calculations?userId=3`)
+        fetch(`${process.env.REACT_APP_API_URL}/calculations?userId=3`)
         .then(res => res.json())
         .then(data => {
             setCalculations(data);
