@@ -9,9 +9,13 @@ export const Register = () => {
     const [surname, setSurname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleRegister = (e) => {
         e.preventDefault();
+        setIsLoading(true);
+
         fetch(`${process.env.REACT_APP_API_URL}/register`, {
             method: 'POST',
             headers: {
@@ -24,15 +28,31 @@ export const Register = () => {
                 password
             })
         })
-        .then((res) => res.json())
+        .then((res) => {
+            if (res.status === 400) {
+                throw new Error('User already exists');
+            }
+
+            if (!res.ok) {
+                throw new Error('Something went wrong');
+            }
+
+            return res.json();
+        })
         .then((data) => {
             navigate('/login');
-        });
+            setIsLoading(false);
+            setError('');
+        })
+        .catch((e) => {
+            setError(e.message);
+            setIsLoading(false);
+        })
     };
 
     return (
         <>
-            <form onSubmit={handleRegister}>
+            <form onSubmit={handleRegister} disabled={isLoading} >
                 <Input
                     placeholder="Name"
                     onChange={(e) => setName(e.target.value)}
@@ -55,6 +75,7 @@ export const Register = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     value={password}
                 />
+                {error && <div>{error}</div>}
                 <Button>Register</Button>
             </form>
             <Link to="/login">Login</Link>
