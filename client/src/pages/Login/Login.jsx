@@ -1,13 +1,16 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
+import { UserContext } from "../../contexts/UserContextWrapper";
 
-export const Login = ({ onSuccess }) => {
+export const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const { setUser } = useContext(UserContext);
+    const navigate = useNavigate();
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -35,9 +38,10 @@ export const Login = ({ onSuccess }) => {
             return res.json();
         })
         .then((data) => {
-            onSuccess(data);
+            setUser(data);
             setIsLoading(false);
             setError('');
+            navigate('/')
         })
         .catch((e) => {
             setError(e.message);
