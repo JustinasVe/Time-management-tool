@@ -40,6 +40,28 @@ app.post('/register', (req, res) => {
     )
 });
 
+app.post('/login', (req, res) => {
+    const { email, password } = req.body;
+
+    connection.execute(
+        'SELECT * FROM users WHERE email=?',
+        [email],
+        (err, result) => {
+            if (result.length === 0) {
+                res.send('Incorrect email or password');
+            } else {
+                const passwordHash = result[0].password
+                const isPasswordCorrect = bcrypt.compareSync(password, passwordHash);
+                if (isPasswordCorrect) {
+                    res.send('Succesfully logged in!');
+                } else {
+                    res.send('Incorrect email or password');
+                }
+            }
+        }
+    )
+});
+
 const PORT = 8000;
 
 app.listen(PORT, () => console.log(`Express server is runnig on PORT: ${PORT}`));
