@@ -27,6 +27,23 @@ app.get('/calculations', (req, res) => {
     });
 });
 
+app.post('/calculations', (req, res) => {
+    const { projectHours, deadline, commitments, maxDailyHours, userId } = req.body;
+    connection.execute(
+        'INSERT INTO calculations (projectHours, deadline, commitments, maxDailyHours, userId) VALUES (?, ?, ?, ?, ?)',
+        [projectHours, deadline, commitments, maxDailyHours, userId],
+        () => {
+            connection.execute(
+                'SELECT * FROM calculations WHERE userId=?',
+                [userId],
+                (err, calculations) => {
+                    res.send(calculations);
+                }
+            )
+        }
+    )
+});
+
 app.post('/register', (req, res) => {
     const { name, surname, email, password } = req.body;
     const hashedPassword = bcrypt.hashSync(password, 12);
