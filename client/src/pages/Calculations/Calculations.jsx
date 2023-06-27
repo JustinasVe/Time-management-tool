@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../contexts/UserContextWrapper";
+import LOCAL_STORAGE_JWT_TOKEN_KEY from "../../constants";
 
 export const Calculations = () => {
     const [calculations, setCalculations] = useState([]);
@@ -12,10 +13,16 @@ export const Calculations = () => {
     const { user } = useContext(UserContext);
 
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_API_URL}/calculations?userId=${user.id}`)
+        fetch(`${process.env.REACT_APP_API_URL}/calculations?userId=${user.id}`, {
+            headers: {
+              authorization: 'Bearer ' + localStorage.getItem(LOCAL_STORAGE_JWT_TOKEN_KEY)
+            }
+        })
         .then(res => res.json())
         .then(data => {
-            setCalculations(data);
+            if (!data.error) {
+              setCalculations(data);
+            }
             setIsLoading(false);
         });
     }, [user.id]);
@@ -29,7 +36,8 @@ export const Calculations = () => {
       fetch(`${process.env.REACT_APP_API_URL}/calculations`, {
           method: 'POST',
           headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              authorization: 'Bearer ' + localStorage.getItem(LOCAL_STORAGE_JWT_TOKEN_KEY)
           },
           body: JSON.stringify({
               projectHours,
@@ -41,11 +49,13 @@ export const Calculations = () => {
       })
       .then((res) => res.json())
       .then((data) => {
-          setCalculations(data);
-          setProjectHours('');
-          setDeadline('');
-          setCommitments('');
-          setMaxDailyHours('');
+          if (!data.error) {
+            setCalculations(data);
+            setProjectHours('');
+            setDeadline('');
+            setCommitments('');
+            setMaxDailyHours('');
+          }
       });
   }
   const handleProjectHoursChange = (event) => {

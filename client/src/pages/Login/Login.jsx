@@ -4,6 +4,8 @@ import Button from "../../components/Button";
 import Input from "../../components/Input";
 import { UserContext } from "../../contexts/UserContextWrapper";
 import styled from 'styled-components';
+import LOCAL_STORAGE_JWT_TOKEN_KEY from "../../constants";
+
 
 const LoginContainer = styled.div`
     align-items: center;
@@ -72,7 +74,9 @@ export const Login = () => {
             return res.json();
         })
         .then((data) => {
-            setUser(data);
+            const { id, email, token } = data;
+            localStorage.setItem(LOCAL_STORAGE_JWT_TOKEN_KEY, token);
+            setUser({ id, email });
             setIsLoading(false);
             setError('');
             navigate('/')

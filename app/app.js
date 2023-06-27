@@ -2,6 +2,7 @@ const cors = require('cors');
 const express = require('express');
 const mysql = require('mysql2');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 require('dotenv').config();
 
@@ -20,14 +21,24 @@ const mysqlConfig = {
 
 const connection = mysql.createConnection(mysqlConfig);
 
-app.get('/calculations', (req, res) => {
+const verifyToken = (req, res, next) => {
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        jwt.verify(token, process.env.JWT_SECRET_KEY);
+        next();
+    } catch(e) {
+        res.send({ error: 'Invalid Token'});
+    }
+}
+
+app.get('/calculations', verifyToken, (req, res) => {
     const { userId } = req.query;
     connection.execute('SELECT * FROM calculations WHERE userId=?', [userId], (err, calculations) => {
         res.send(calculations)
     });
 });
 
-app.post('/calculations', (req, res) => {
+app.post('/calculations', verifyToken, (req, res) => {
     const { projectHours, deadline, commitments, maxDailyHours, userId } = req.body;
     connection.execute(
         'INSERT INTO calculations (projectHours, deadline, commitments, maxDailyHours, userId) VALUES (?, ?, ?, ?, ?)',
@@ -73,7 +84,9 @@ app.post('/login', (req, res) => {
                 const passwordHash = result[0].password
                 const isPasswordCorrect = bcrypt.compareSync(password, passwordHash);
                 if (isPasswordCorrect) {
-                    res.send(result[0]);
+                    const { id, email } = result[0];
+                    const token = jwt.sign({ id, email }, process.env.JWT_SECRET_KEY, { expiresIn: '5d'});
+                    res.send({ token, id, email });
                 } else {
                     res.sendStatus(401);
                 }
